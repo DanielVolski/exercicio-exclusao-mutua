@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "headers.h": "c",
-        "iosfwd": "c",
-        "fstream": "cpp"
-    }
-}
