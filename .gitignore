@@ -1,2 +1,4 @@
 *.exe
-clients.txt
+*.txt
+main
+.vscode
