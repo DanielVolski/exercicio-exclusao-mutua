@@ -3,6 +3,8 @@
 
 using namespace std;
 
+
+
 class Client
 {
 public:
@@ -25,7 +27,39 @@ public:
         file.close();
     }
 
+    void debit_account (float amount_to_debit, string file_name)
+    {
+        string id;
+        fstream file;
+        file.open(file_name);
+
+        while (getline(file_name, id) != )
+        {
+            getline(file_name, client.id, ' ');
+            getline(file_name, client.name, ' ');
+            getline(file_name, client.balance);
+        }
+        
+        if (client.balance >= amount_to_debit)   
+        {
+            client.balance -= amount_to_debit;
+            cout << "Operacao realizada com sucesso!" << endl;
+            cout << "Id: " << client.id << " Nome: " << client.name << endl;
+            cout << "Operacao: " << client.balance << " - " << amount_to_debit << 
+            " = " << client.balance - amount_to_debit << endl;
+        }
+        else
+        {
+            cout << "Saldo insuficiente!" << endl;
+        }
+
+
+        
+    }
+
 private: 
+
+    Client client;
     int get_last_id(string file_name)
     {
         fstream file;
@@ -101,6 +135,7 @@ int main()
             break;
 
         case 3:
+            
             break;
 
         case 4:
@@ -115,3 +150,4 @@ int main()
 
     return 0;
 }
+
