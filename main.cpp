@@ -35,7 +35,37 @@ public:
         file.close();
         file_in_use = false;
     }
+    /*
+    void debit_account (float amount_to_debit, string file_name)
+    {
+        string id;
+        fstream file;
+        file.open(file_name);
 
+        while (getline(file_name, id) != )
+        {
+            getline(file_name, client.id, ' ');
+            getline(file_name, client.name, ' ');
+            getline(file_name, client.balance);
+        }
+        
+        if (client.balance >= amount_to_debit)   
+        {
+            client.balance -= amount_to_debit;
+            cout << "Operacao realizada com sucesso!" << endl;
+            cout << "Id: " << client.id << " Nome: " << client.name << endl;
+            cout << "Operacao: " << client.balance << " - " << amount_to_debit << 
+            " = " << client.balance - amount_to_debit << endl;
+        }
+        else
+        {
+            cout << "Saldo insuficiente!" << endl;
+        }
+
+
+        
+    }*/
+    /*
     void debit_account (float amount_to_debit, string file_name)
     {
         string id;
@@ -65,40 +95,24 @@ public:
 
         
     }
-
-    void debit_account (float amount_to_debit, string file_name)
+    */
+ 
+    string get_line_by_id(string file_name, int id)
     {
-        string id;
         fstream file;
+        int counter = 0;
+        string line;
         file.open(file_name);
-
-        while (getline(file_name, id) != )
+        while (counter != id)
         {
-            getline(file_name, client.id, ' ');
-            getline(file_name, client.name, ' ');
-            getline(file_name, client.balance);
+            getline(file, line);
+            counter++;
         }
-        
-        if (client.balance >= amount_to_debit)   
-        {
-            client.balance -= amount_to_debit;
-            cout << "Operacao realizada com sucesso!" << endl;
-            cout << "Id: " << client.id << " Nome: " << client.name << endl;
-            cout << "Operacao: " << client.balance << " - " << amount_to_debit << 
-            " = " << client.balance - amount_to_debit << endl;
-        }
-        else
-        {
-            cout << "Saldo insuficiente!" << endl;
-        }
+        file.close();
 
-
-        
+        return line;
     }
 
-private: 
-
-    Client client;
     int get_last_id(string file_name)
     {
         fstream file;
@@ -145,7 +159,11 @@ int main()
     fstream clients_file;
     const string FILE_NAME = "clients.txt";
     int option = 0;
+    Client client("Teste", FILE_NAME);
 
+    cout << client.get_line_by_id(FILE_NAME, 5);
+
+    /*
     do
     {
         CLEAR_SCREEN();
@@ -182,7 +200,7 @@ int main()
             cout << "Opcao invalida! Tente novamente." << endl;
             break;
         }
-    } while ((option > 0 and option < 4));
+    } while ((option > 0 and option < 4));*/
 
     return 0;
 }
