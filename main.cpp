@@ -1,7 +1,16 @@
 #include <iostream>
 #include <fstream>
+#include <thread>
+
+#if defined(_WIN32)
+    #define CLEAR_SCREEN() system("cls")
+#else
+    #define CLEAR_SCREEN() system("clear")
+#endif
 
 using namespace std;
+
+bool file_in_use = false;
 
 class Client
 {
@@ -20,9 +29,21 @@ public:
     void register_client(string file_name)
     {
         fstream file;
+        file_in_use = true;
         file.open(file_name, ios::app);
-        file << endl << id << " " << name << " " << balance;
+        file << endl << id << "," << name << "," << balance << ",";
         file.close();
+        file_in_use = false;
+    }
+
+    void deposit_into_account(string file_name)
+    {
+
+    }
+
+    void debt_from_account(string file_name)
+    {
+
     }
 
 private: 
@@ -75,11 +96,8 @@ int main()
 
     do
     {
-        #if defined(_WIN32)
-            system("cls");
-        #else
-            system("clear");
-        #endif
+        CLEAR_SCREEN();
+        
         cout << "Gestao de conta bancaria" << endl;
         cout << "Escolha uma opcao:" << endl;
         cout << "1 - Cadastrar novo cliente" << endl;
@@ -111,7 +129,7 @@ int main()
             cout << "Opcao invalida! Tente novamente." << endl;
             break;
         }
-    } while ((option > 0 and option < 4) and 1 == 2);
+    } while ((option > 0 and option < 4));
 
     return 0;
 }
