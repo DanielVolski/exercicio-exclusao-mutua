@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <mutex>
 
 #if defined(_WIN32)
     #define CLEAR_SCREEN() system("cls")
@@ -36,70 +37,78 @@ public:
         file_in_use = false;
     }
 
-    /*
-    void debit_account (float amount_to_debit, string file_name)
+    
+    void static debit_account (string file_name, int id, float amount)
     {
-        string id;
-        fstream file;
+        mutex mutex;
+        fstream file; 
+        ofstream temp;
+        int counter = 1;
+        string line, aux, id_file, name_file, balance_file;
+        mutex.lock();
         file.open(file_name);
-
-        while (getline(file_name, id) != )
+        temp.open("temp.txt", ios::out);
+        while (getline(file, line, '\n'))
         {
-            getline(file_name, client.id, ' ');
-            getline(file_name, client.name, ' ');
-            getline(file_name, client.balance);
+            if (counter == id)
+                break;
+            line.push_back('\n');
+            temp << line;
+            counter++;
+        }
+
+        for (int i = 0; i < line.length(); i++)
+        {
+            if (line[i] != ',' and line[i] != '\n')
+                aux.push_back(line[i]);
+            if (line[i] == ',')
+            {
+                if (id_file.empty())
+                {
+                    id_file = aux;
+                    aux.clear();
+                    continue;
+                }
+                if (name_file.empty())
+                {
+                    name_file = aux;
+                    aux.clear();
+                    continue;
+                }
+                if (balance_file.empty())
+                {
+                    balance_file = aux;
+                    aux.clear();
+                    continue;
+                }
+            }
+        }
+
+        temp << id_file << "," << name_file << "," << stof(balance_file) - amount << "," << endl;
+
+        while (getline(file, line))
+        {
+            line.push_back('\n');
+            temp << line;
         }
         
-        if (client.balance >= amount_to_debit)   
-        {
-            client.balance -= amount_to_debit;
-            cout << "Operacao realizada com sucesso!" << endl;
-            cout << "Id: " << client.id << " Nome: " << client.name << endl;
-            cout << "Operacao: " << client.balance << " - " << amount_to_debit << 
-            " = " << client.balance - amount_to_debit << endl;
-        }
-        else
-        {
-            cout << "Saldo insuficiente!" << endl;
-        }
+        temp.close();
+        file.close();
 
-
-        
+        remove(file_name.c_str());
+        rename("temp.txt", file_name.c_str());
+        mutex.unlock();
     }
-    void debit_account (float amount_to_debit, string file_name)
-    {
-        string id;
-        fstream file;
-        file.open(file_name);
-
-        while (getline(file_name, id) != )
-        {
-            getline(file_name, client.id, ' ');
-            getline(file_name, client.name, ' ');
-            getline(file_name, client.balance);
-        }
-        
-        if (client.balance >= amount_to_debit)   
-        {
-            client.balance -= amount_to_debit;
-            cout << "Operacao realizada com sucesso!" << endl;
-            cout << "Id: " << client.id << " Nome: " << client.name << endl;
-            cout << "Operacao: " << client.balance << " - " << amount_to_debit << 
-            " = " << client.balance - amount_to_debit << endl;
-        }
-        else
-        {
-            cout << "Saldo insuficiente!" << endl;
-        }
-    }*/
  
     void static deposit_account (string file_name, int id, float amount)
     {
+        mutex mutex;
         fstream file; 
         ofstream temp;
         int counter = 1;
         string line, aux, id_file, name_file, balance_file;
 
+        mutex.lock();
         file.open(file_name);
         temp.open("temp.txt", ios::out);
         while (getline(file, line, '\n'))
@@ -151,6 +160,7 @@ public:
 
         remove(file_name.c_str());
         rename("temp.txt", file_name.c_str());
+        mutex.unlock(); 
     }
 
     int get_last_id(string file_name)
