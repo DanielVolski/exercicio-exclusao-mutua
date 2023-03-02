@@ -31,7 +31,7 @@ public:
         fstream file;
         file_in_use = true;
         file.open(file_name, ios::app);
-        file << endl << id << "," << name << "," << balance << ",";
+        file << id << "," << name << "," << balance << "\n";
         file.close();
         file_in_use = false;
     }
@@ -102,7 +102,7 @@ public:
 
         file.open(file_name);
         temp.open("temp.txt", ios::out);
-        while (getline(file, line))
+        while (getline(file, line, '\n'))
         {
             if (counter == id)
                 break;
@@ -184,13 +184,12 @@ public:
 
         for (int i = 0; i < last_line.length(); i++)
         {
-            if (last_line[i] == ' ')
-                break;
-            if (last_line[i] != '\n')
+            cout << last_line[i];
+            if (last_line[i] != '\n' or last_line[i] != ',')
                 id.push_back(last_line[i]);
         }
 
-        return stoi(id);
+        return 1;
     }
 };
 
@@ -198,46 +197,13 @@ int main()
 {
     fstream clients_file;
     const string FILE_NAME = "clients.txt";
-    int option = 0;
 
-    do
-    {
-        CLEAR_SCREEN();
-        
-        cout << "Gestao de conta bancaria" << endl;
-        cout << "Escolha uma opcao:" << endl;
-        cout << "1 - Cadastrar novo cliente" << endl;
-        cout << "2 - Creditar" << endl;
-        cout << "3 - Debitar" << endl;
-        cout << "4 - Sair" << endl;
-        cin >> option;
+    Client client("asd", FILE_NAME);
 
-        switch (option)
-        {
-        case 1:
-        {
-            string name = "";
-            cin >> name;
-            Client new_client(name, FILE_NAME);
-            new_client.register_client(FILE_NAME);
-        }
-        case 2:
-            break;
-
-        case 3:
-            
-            break;
-
-        case 4:
-            cout << "Encerrando programa." << endl;
-            break;
-
-        default:
-            cout << "Opcao invalida! Tente novamente." << endl;
-            break;
-        }
-    } while ((option > 0 and option < 4));
+    thread thread1(client.deposit_account, FILE_NAME, 3, 300);
+    thread thread2(client.debit_account, FILE_NAME, 3, 300);
+    thread1.join();
+    thread2.join();
 
     return 0;
 }
-
