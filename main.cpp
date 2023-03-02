@@ -35,36 +35,7 @@ public:
         file.close();
         file_in_use = false;
     }
-    /*
-    void debit_account (float amount_to_debit, string file_name)
-    {
-        string id;
-        fstream file;
-        file.open(file_name);
 
-        while (getline(file_name, id) != )
-        {
-            getline(file_name, client.id, ' ');
-            getline(file_name, client.name, ' ');
-            getline(file_name, client.balance);
-        }
-        
-        if (client.balance >= amount_to_debit)   
-        {
-            client.balance -= amount_to_debit;
-            cout << "Operacao realizada com sucesso!" << endl;
-            cout << "Id: " << client.id << " Nome: " << client.name << endl;
-            cout << "Operacao: " << client.balance << " - " << amount_to_debit << 
-            " = " << client.balance - amount_to_debit << endl;
-        }
-        else
-        {
-            cout << "Saldo insuficiente!" << endl;
-        }
-
-
-        
-    }*/
     /*
     void debit_account (float amount_to_debit, string file_name)
     {
@@ -95,22 +66,91 @@ public:
 
         
     }
-    */
- 
-    string get_line_by_id(string file_name, int id)
+    void debit_account (float amount_to_debit, string file_name)
     {
+        string id;
         fstream file;
-        int counter = 0;
-        string line;
         file.open(file_name);
-        while (counter != id)
+
+        while (getline(file_name, id) != )
         {
-            getline(file, line);
+            getline(file_name, client.id, ' ');
+            getline(file_name, client.name, ' ');
+            getline(file_name, client.balance);
+        }
+        
+        if (client.balance >= amount_to_debit)   
+        {
+            client.balance -= amount_to_debit;
+            cout << "Operacao realizada com sucesso!" << endl;
+            cout << "Id: " << client.id << " Nome: " << client.name << endl;
+            cout << "Operacao: " << client.balance << " - " << amount_to_debit << 
+            " = " << client.balance - amount_to_debit << endl;
+        }
+        else
+        {
+            cout << "Saldo insuficiente!" << endl;
+        }
+    }*/
+ 
+    void static deposit_account (string file_name, int id, float amount)
+    {
+        fstream file; 
+        ofstream temp;
+        int counter = 1;
+        string line, aux, id_file, name_file, balance_file;
+
+        file.open(file_name);
+        temp.open("temp.txt", ios::out);
+        while (getline(file, line))
+        {
+            if (counter == id)
+                break;
+            line.push_back('\n');
+            temp << line;
             counter++;
         }
+
+        for (int i = 0; i < line.length(); i++)
+        {
+            if (line[i] != ',' and line[i] != '\n')
+                aux.push_back(line[i]);
+            if (line[i] == ',')
+            {
+                if (id_file.empty())
+                {
+                    id_file = aux;
+                    aux.clear();
+                    continue;
+                }
+                if (name_file.empty())
+                {
+                    name_file = aux;
+                    aux.clear();
+                    continue;
+                }
+                if (balance_file.empty())
+                {
+                    balance_file = aux;
+                    aux.clear();
+                    continue;
+                }
+            }
+        }
+
+        temp << id_file << "," << name_file << "," << stof(balance_file) + amount << "," << endl;
+
+        while (getline(file, line))
+        {
+            line.push_back('\n');
+            temp << line;
+        }
+        
+        temp.close();
         file.close();
 
-        return line;
+        remove(file_name.c_str());
+        rename("temp.txt", file_name.c_str());
     }
 
     int get_last_id(string file_name)
@@ -159,11 +199,7 @@ int main()
     fstream clients_file;
     const string FILE_NAME = "clients.txt";
     int option = 0;
-    Client client("Teste", FILE_NAME);
 
-    cout << client.get_line_by_id(FILE_NAME, 5);
-
-    /*
     do
     {
         CLEAR_SCREEN();
@@ -200,7 +236,7 @@ int main()
             cout << "Opcao invalida! Tente novamente." << endl;
             break;
         }
-    } while ((option > 0 and option < 4));*/
+    } while ((option > 0 and option < 4));
 
     return 0;
 }
